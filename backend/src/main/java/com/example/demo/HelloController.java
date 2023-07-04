@@ -22,12 +22,23 @@ public class HelloController {
     @Autowired
     EmployeeRepository employeeRepository;
 
-    @GetMapping("/pass")
-    public String getPassword() {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode("password");
+    @PostMapping("/auth/login")
+    public ResponseEntity<String> login(@RequestBody Employee employee) {
+        // リポジトリからユーザーを取得します。
+        Employee existingEmployee = employeeRepository.findByEmail(employee.getEmail());
+        if (existingEmployee == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid login details");
+        }
 
-        return  hashedPassword;
+        // パスワードをチェックします。
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean isPasswordMatch = passwordEncoder.matches(employee.getPassword(), existingEmployee.getPassword());
+        if (!isPasswordMatch) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid login details");
+        }
+
+        // ログインが成功した場合、200 OKとメッセージを返します。
+        return ResponseEntity.ok("Login successful");
     }
 
     @PreAuthorize("hasAuthority('CAN_VIEW')")

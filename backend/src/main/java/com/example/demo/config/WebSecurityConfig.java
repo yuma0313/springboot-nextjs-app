@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +35,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()  // 追加
+                .csrf().disable()
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
@@ -42,7 +43,9 @@ public class WebSecurityConfig {
                 .and()
                 .logout().permitAll()
                 .and()
-                .httpBasic()  // 追加
+                .httpBasic()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // セッション管理の追加
                 .and()
                 .exceptionHandling()
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
