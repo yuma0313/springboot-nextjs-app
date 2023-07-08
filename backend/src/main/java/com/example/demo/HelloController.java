@@ -6,8 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.example.demo.repository.EmployeeRepository;
@@ -23,7 +26,7 @@ public class HelloController {
     EmployeeRepository employeeRepository;
 
     @PostMapping("/auth/login")
-    public ResponseEntity<String> login(@RequestBody Employee employee) {
+    public ResponseEntity<?> login(@RequestBody Employee employee) {
         // リポジトリからユーザーを取得します。
         Employee existingEmployee = employeeRepository.findByEmail(employee.getEmail());
         if (existingEmployee == null) {
@@ -37,8 +40,24 @@ public class HelloController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid login details");
         }
 
-        // ログインが成功した場合、200 OKとメッセージを返します。
-        return ResponseEntity.ok("Login successful");
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", "Login successful");
+
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @GetMapping("/auth/check")
+    public ResponseEntity<?> authCheck() {
+        try {
+            // If user is authenticated, this line won't throw exception
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal == null) {
+                return ResponseEntity.status(401).body("Not Authenticated");
+            }
+            return ResponseEntity.ok().body("Authenticated");
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Not Authenticated");
+        }
     }
 
     @PreAuthorize("hasAuthority('CAN_VIEW')")
