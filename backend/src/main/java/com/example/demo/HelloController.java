@@ -64,6 +64,7 @@ public class HelloController {
     @GetMapping("/employees")
     public List<Map<String, Object>> getEmployees() {
         String sql = "SELECT \n" +
+                "  e.employee_id, \n" +
                 "  e.name, \n" +
                 "  e.email, \n" +
                 "  e.password, \n" +
