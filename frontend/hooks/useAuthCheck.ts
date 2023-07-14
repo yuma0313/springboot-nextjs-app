@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { useRole } from "../context/RoleContext";
 import Cookie from "universal-cookie";
 
 const cookie = new Cookie();
 
-export const useAuthCheck = (): void => {
+export const useAuthCheck = () => {
   const router = useRouter();
+  const { setRole } = useRole();
 
   useEffect(() => {
-    //ページが描画される前に認証チェック
     const checkAuth = async () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/check`,
@@ -21,6 +22,9 @@ export const useAuthCheck = (): void => {
       if (res.status !== 200) {
         router.push("/");
       }
+
+      const data = await res.json();
+      setRole(data);
     };
     checkAuth();
   }, []);

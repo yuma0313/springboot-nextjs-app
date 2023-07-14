@@ -6,10 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +54,13 @@ public class HelloController {
     public ResponseEntity<?> authCheck() {
         try {
             // If user is authenticated, this line won't throw exception
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (principal == null) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetails userDetails = (UserDetails) ((Authentication) authentication).getPrincipal();
+            Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+            if (userDetails == null) {
                 return ResponseEntity.status(401).body("Not Authenticated");
             }
-            return ResponseEntity.ok().body("Authenticated");
+            return ResponseEntity.ok().body(authorities);
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Not Authenticated");
         }

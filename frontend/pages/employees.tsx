@@ -18,7 +18,6 @@ const Employees = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       const employeesData = await getAllEmployeeData();
-      console.log(employeesData);
       setEmployees(employeesData);
     };
     fetchEmployees();

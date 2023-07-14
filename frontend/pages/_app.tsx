@@ -1,8 +1,13 @@
 import "../styles/globals.css";
 import { AppProps } from "next/app";
+import { RoleProvider } from "../context/RoleContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <RoleProvider>
+      <Component {...pageProps} />
+    </RoleProvider>
+  );
 }
 
 export default MyApp;

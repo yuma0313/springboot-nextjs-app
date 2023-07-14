@@ -54,12 +54,12 @@ public class Employee implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // It's better to return an empty collection than null
+        return Collections.emptyList();
     }
 
     @Override
     public String getPassword() {
-        return password; // Corrected from recursive call to return the password field
+        return password;
     }
 
     @Override

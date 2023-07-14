@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 import { getEmployeeData } from "../../libs/employees";
 import { useAuthCheck } from "../../hooks/useAuthCheck";
@@ -9,6 +9,7 @@ const EmployeeDetail = () => {
   const { id } = router.query;
   const [employee, setEmployee] = useState(null);
 
+  //認証チェック
   useAuthCheck();
 
   useEffect(() => {
@@ -28,13 +29,9 @@ const EmployeeDetail = () => {
   return (
     <Layout title="詳細ページ">
       <div className="container mx-auto mt-10 max-w-7xl px-6 py-6 bg-white shadow rounded-md min-h-[calc(100vh_-_150px)]">
-        <p className="font-bold text-center text-2xl">基本情報</p>
-        <div className="flex justify-start mb-4">
-          <button className="bg-teal-500 text-white font-bold py-2 px-4 rounded mr-4">
-            従業員情報を編集する
-          </button>
+        <div className="flex items-center mb-2">
           <button className="bg-teal-500 text-white font-bold py-2 px-4 rounded">
-            削除
+            従業員情報を編集する
           </button>
         </div>
         <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 divide-y md:divide-y-0">
