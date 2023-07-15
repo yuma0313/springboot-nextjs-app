@@ -25,7 +25,7 @@ const Employees = () => {
 
   return (
     <Layout title="一覧ページ">
-      <div className="mx-auto w-full max-w-7xl px-6 py-6">
+      <div className="mx-auto max-w-[1200px] max-w-7xl px-6 py-6">
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left text-gray-700">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">

@@ -106,7 +106,10 @@ public class HelloController {
                 "  e.leave_date,\n" +
                 "  p.position_name, \n" +
                 "  d.department_name, \n" +
-                "  r.role_name \n" +
+                "  r.role_name, \n" +
+                "  p.position_id, \n" +
+                "  d.department_id, \n" +
+                "  r.role_id \n" +
                 "FROM \n" +
                 "  employees e \n" +
                 "LEFT JOIN \n" +

@@ -3,34 +3,29 @@ import { useRouter } from "next/router";
 import { getEmployeeData } from "../../libs/employees";
 import { useAuthCheck } from "../../hooks/useAuthCheck";
 import Layout from "../../components/organisms/Layout";
+import { useGetEmployeeDetail } from "../../hooks/useEmployeeDetail";
 
 const EmployeeDetail = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [employee, setEmployee] = useState(null);
+  //カスタムフックで詳細データ取得
+  const { employee, loading } = useGetEmployeeDetail(id);
 
-  //認証チェック
+  //カスタムフックで認証チェック
   useAuthCheck();
 
-  useEffect(() => {
-    const fetchEmployee = async () => {
-      const employeeData = await getEmployeeData(id);
-      setEmployee(employeeData);
-    };
-    if (id) {
-      fetchEmployee();
-    }
-  }, [id]);
-
-  if (!employee) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <Layout title="詳細ページ">
-      <div className="container mx-auto mt-10 max-w-7xl px-6 py-6 bg-white shadow rounded-md min-h-[calc(100vh_-_150px)]">
+      <div className="container mx-auto max-w-[1200px] mt-10 px-6 py-6 bg-white shadow rounded-md min-h-[calc(100vh_-_150px)]">
         <div className="flex items-center mb-2">
-          <button className="bg-teal-500 text-white font-bold py-2 px-4 rounded">
+          <button
+            className="bg-teal-500 text-white font-bold py-2 px-4 rounded"
+            onClick={() => router.push(`/employees/edit/${id}`)}
+          >
             従業員情報を編集する
           </button>
         </div>
