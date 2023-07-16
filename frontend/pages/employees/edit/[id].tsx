@@ -10,7 +10,6 @@ import Layout from "../../../components/organisms/Layout";
 const EmployeeEdit = () => {
   const router = useRouter();
   const { id } = router.query; // URLからIDを取得
-  const { role } = useRole();
   const {
     register,
     handleSubmit,
@@ -32,7 +31,7 @@ const EmployeeEdit = () => {
   });
 
   //カスタムフックで認証チェック
-  useAuthCheck();
+  useAuthCheck("CAN_EDIT");
 
   // カスタムフックを使ってデータを取得
   const { employee, loading } = useGetEmployeeDetail(id);
@@ -50,17 +49,6 @@ const EmployeeEdit = () => {
       setValue("roleId", employee.role_id);
     }
   }, [employee, setValue]);
-
-  useEffect(() => {
-    // roleが空でないときだけ権限チェックを行う
-    if (role && role.length > 0) {
-      //loadingがfalse(終了済)かつ、role配列の中にauthority:CAN_EDITの要素が存在しないとき
-      if (!loading && !role.some((r) => r.authority === "CAN_EDIT")) {
-        alert("権限がありません");
-        router.push(`/employees/${id}`);
-      }
-    }
-  }, [role, loading, router]);
 
   if (loading) {
     return <div>Loading...</div>;

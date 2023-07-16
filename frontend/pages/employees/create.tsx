@@ -1,5 +1,3 @@
-import { useRole } from "../../context/RoleContext";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuthCheck } from "../../hooks/useAuthCheck";
 import { postEmployeeData } from "../../libs/employees";
@@ -8,12 +6,9 @@ import { useForm } from "react-hook-form";
 
 const EmployeeCreate = () => {
   const router = useRouter();
-  const { role } = useRole();
-  const [loading, setLoading] = useState(true);
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -30,49 +25,12 @@ const EmployeeCreate = () => {
     },
   });
 
-  // 状態の初期化（useStateでの初期値セットを除去）
-  let employeeData = {
-    name: "",
-    email: "",
-    phoneNumber: "",
-    status: "",
-    joinDate: "",
-    leaveDate: "",
-    positionId: null,
-    departmentId: null,
-    roleId: null,
-    password: "password",
-  };
-
   //カスタムフックで認証チェック
-  useAuthCheck();
-
-  useEffect(() => {
-    // roleが空でないときだけ権限チェックを行う
-    if (role && role.length > 0) {
-      setLoading(false);
-
-      //loadingがfalse(終了済)かつ、role配列の中にauthority:CAN_ADDの要素が存在しないとき
-      if (!loading && !role.some((r) => r.authority === "CAN_ADD")) {
-        alert("権限がありません");
-        router.push("/employees");
-      }
-    }
-  }, [role, loading, router]);
+  const { loading } = useAuthCheck("CAN_ADD");
 
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  const handleInputChange = (e) => {
-    const value =
-      e.target.name === "departmentId" ||
-      e.target.name === "positionId" ||
-      e.target.name === "roleId"
-        ? parseInt(e.target.value)
-        : e.target.value;
-    setValue(e.target.name, value);
-  };
 
   const onSubmit = async (data) => {
     // 各プルダウンメニューが選択されているかチェック
@@ -91,8 +49,7 @@ const EmployeeCreate = () => {
 
   return (
     <Layout title="登録ページ">
-      <div className="container mx-auto mt-10 max-w-7xl px-6 py-6 bg-white shadow rounded-md min-h-[calc(100vh-_150px)]">
-        <p className="font-bold text-center text-2xl">基本情報</p>
+      <div className="container mx-auto max-w-[1200px] mt-10 px-6 py-6 bg-white shadow rounded-md min-h-[calc(100vh-_150px)]">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-start mb-4">
             <button
@@ -110,7 +67,6 @@ const EmployeeCreate = () => {
                   <input
                     type="text"
                     {...register("name", { required: "氏名は必須項目です。" })}
-                    onChange={handleInputChange}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-700"
                   />
                   {errors.name && <p>{errors.name.message}</p>}
@@ -126,7 +82,6 @@ const EmployeeCreate = () => {
                     {...register("email", {
                       required: "メールアドレスは必須項目です。",
                     })}
-                    onChange={handleInputChange}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-700"
                   />
                   {errors.email && <p>{errors.email.message}</p>}
@@ -140,7 +95,6 @@ const EmployeeCreate = () => {
                     {...register("phoneNumber", {
                       required: "電話番号は必須項目です。",
                     })}
-                    onChange={handleInputChange}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-700"
                   />
                   {errors.phoneNumber && <p>{errors.phoneNumber.message}</p>}
@@ -156,7 +110,6 @@ const EmployeeCreate = () => {
                         required: "ステータスは必須項目です。",
                       })}
                       value="active"
-                      onChange={handleInputChange}
                       className="mr-1 outline-none"
                     />
                     在職中
@@ -166,7 +119,6 @@ const EmployeeCreate = () => {
                       type="radio"
                       {...register("status")}
                       value="inactive"
-                      onChange={handleInputChange}
                       className="mr-1 outline-none"
                     />
                     退職済
@@ -182,7 +134,6 @@ const EmployeeCreate = () => {
                     {...register("joinDate", {
                       required: "入社日は必須項目です。",
                     })}
-                    onChange={handleInputChange}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-700"
                   />
                 </dd>
@@ -196,7 +147,6 @@ const EmployeeCreate = () => {
                   <input
                     type="date"
                     {...register("leaveDate")}
-                    onChange={handleInputChange}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-700"
                   />
                 </dd>
@@ -206,8 +156,7 @@ const EmployeeCreate = () => {
                 <dd className="text-lg font-normal pl-3">
                   <select
                     name="positionId"
-                    value={employeeData.positionId}
-                    onChange={handleInputChange}
+                    {...register("positionId")}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-700"
                   >
                     <option value="">選択してください</option>
@@ -223,8 +172,7 @@ const EmployeeCreate = () => {
                 <dd className="text-lg font-normal pl-3">
                   <select
                     name="departmentId"
-                    value={employeeData.departmentId}
-                    onChange={handleInputChange}
+                    {...register("departmentId")}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-700"
                   >
                     <option value="">選択してください</option>
@@ -241,8 +189,7 @@ const EmployeeCreate = () => {
                 <dd className="text-lg font-normal pl-3">
                   <select
                     name="roleId"
-                    value={employeeData.roleId}
-                    onChange={handleInputChange}
+                    {...register("roleId")}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none text-gray-700"
                   >
                     <option value="">選択してください</option>

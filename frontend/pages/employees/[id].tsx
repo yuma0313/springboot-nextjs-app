@@ -1,6 +1,4 @@
-import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
-import { getEmployeeData } from "../../libs/employees";
 import { useAuthCheck } from "../../hooks/useAuthCheck";
 import Layout from "../../components/organisms/Layout";
 import { useGetEmployeeDetail } from "../../hooks/useEmployeeDetail";
@@ -12,7 +10,7 @@ const EmployeeDetail = () => {
   const { employee, loading } = useGetEmployeeDetail(id);
 
   //カスタムフックで認証チェック
-  useAuthCheck();
+  useAuthCheck("CAN_VIEW");
 
   if (loading) {
     return <div>Loading...</div>;
