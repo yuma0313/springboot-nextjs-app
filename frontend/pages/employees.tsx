@@ -12,7 +12,7 @@ const Employees = () => {
   const router = useRouter();
   const [employees, setEmployees] = useState([]);
 
-  // //カスタムフックで認証チェック
+  //カスタムフックで認証チェック
   useAuthCheck("CAN_VIEW");
 
   useEffect(() => {

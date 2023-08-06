@@ -6,20 +6,19 @@ const Navbar = () => {
       <div className="px-5 py-3 md:px-10">
         <div className="mx-auto max-w-[1200px]">
           <div className="flex items-center justify-between">
-            <Link
-              href="/employees"
-              className="text-white bg-teal-500 p-2 font-bold rounded-sm cursor-pointer"
-            >
-              従業員管理システム
+            <Link href="/employees">
+              <a className="text-white bg-teal-500 p-2 font-bold rounded-sm cursor-pointer">
+                従業員管理システム
+              </a>
             </Link>
             <nav>
               <ul className="flex items-center gap-x-4 text-new-sm font-bold">
                 <li>
-                  <a href="/employees/create">
-                    <span className="hover-normal inline-block px-2 py-1 md:px-3 md:py-2">
+                  <Link href="/employees/create">
+                    <a className="hover-normal inline-block px-2 py-1 md:px-3 md:py-2">
                       従業員登録
-                    </span>
-                  </a>
+                    </a>
+                  </Link>
                 </li>
               </ul>
             </nav>

@@ -20,6 +20,7 @@ import java.util.Map;
 import com.example.demo.repository.EmployeeRepository;
 import org.springframework.web.server.ResponseStatusException;
 
+@RequestMapping("/api")
 @RestController
 public class EmployeeController {
 

@@ -9,22 +9,6 @@ const Auth = () => {
   const authUser = async (e) => {
     e.preventDefault();
     try {
-      // const res = await fetch(
-      //   `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/login`,
-      //   {
-      //     method: "POST",
-      //     body: JSON.stringify({ email: email, password: password }),
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     credentials: "include",
-      //   }
-      // );
-      // if (res.status === 400) {
-      //   throw "authentication failed";
-      // }
-      // router.push("/employees");
-
       // Base64エンコードのための文字列を作成
       const credentials = btoa(`${email}:${password}`);
       const res = await fetch(
